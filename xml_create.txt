@@ -1,0 +1,27 @@
+void ConfPage::saveData()
+{
+    QDomText text;
+    QDomDocument doc;
+    QDomElement root = doc.createElement("Conf");
+    doc.appendChild(root);
+
+    QStringList temp;
+    for (int i=0; i < colors.size(); i++) {
+        QPalette palette = colors.at(i)->palette();
+        temp.append(palette.color(QPalette::Background).name());
+    }
+    QDomElement color = doc.createElement("color");
+    root.appendChild(color);
+    text = doc.createTextNode(temp.join(","));
+    color.appendChild(text);
+
+    temp.clear();
+    temp.append(typeComboBox->currentText());
+    QDomElement type = doc.createElement("type");
+    root.appendChild(type);
+    text = doc.createTextNode(temp.join(","));
+    type.appendChild(text);
+
+    emit sendNetMsg(doc.toByteArray());
+    emit buttonClicked(NULL);
+}
